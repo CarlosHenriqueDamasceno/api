@@ -1,39 +1,7 @@
-use std::{collections::HashMap, error::Error};
+use std::collections::HashMap;
 
-// Entities
-pub struct Car {
-    pub id: u32,
-    pub brand: String,
-    pub model: String,
-    pub year: u16,
-    pub plate: Option<String>,
-    pub price: f32
-}
+use crate::{repositories::car_repository::CarRepository, entities::Car};
 
-// Use cases
-pub struct GetCar {
-    repository: Box<dyn CarRepository>
-}
-
-impl GetCar {
-    
-    pub fn new (repository:Box<dyn CarRepository>) -> GetCar {
-        GetCar { repository }
-    }
-
-    pub fn execute(&self, id:u32) -> Result<&Car, Box<dyn Error>>{
-        let result = self.repository.get(id)?;
-        Ok(result)
-    }
-}
-
-// Domain Repositories Contracts
-pub trait CarRepository {
-    fn get(&self, id:u32) -> Result<&Car, &'static str>;
-}
-
-
-// Infra Repositories
 pub struct MemoryCarRepository{
     cars: HashMap<u32, Car>
 }
