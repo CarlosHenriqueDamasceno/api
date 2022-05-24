@@ -20,8 +20,9 @@ mod tests {
 
                 assert_eq!(car.model, String::from("Onix"));
             }
-            Err(error) => {
-                assert_eq!(error.to_string(), String::from("Onix"));
+            _ => {
+
+                assert!(false);
             }
         }
         
