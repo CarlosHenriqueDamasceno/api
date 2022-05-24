@@ -1,0 +1,18 @@
+Car
+    Id,
+    Brand,
+    Model,
+    Year,
+    Plate,
+    Price
+
+Customer
+    Id,
+    Name,
+    Document (CPF, CNPJ),
+
+Sale
+    Id,
+    CustomerId,
+    CarId,
+    PaymentMethod,
