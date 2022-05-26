@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{repositories::car_repository::CarRepository, entities::Car};
+use crate::{repositories::CarRepository, entities::Car};
 
 pub struct MemoryCarRepository{
     cars: HashMap<u32, Car>
