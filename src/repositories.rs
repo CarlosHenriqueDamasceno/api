@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use crate::{entities::{car::Car, customer::Customer}, dto::{CustomerInputDTO, CustomerOutputDTO}};
+use crate::{entities::{car::Car, customer::Customer}, dtos::{CustomerInputDTO, CustomerOutputDTO}};
 pub trait CarRepository {
     fn get(&self, id:u32) -> Result<Car, &'static str>;
 }

@@ -1,4 +1,4 @@
-use crate::dto::{CustomerInputDTO, CustomerOutputDTO};
+use crate::dtos::{CustomerInputDTO, CustomerOutputDTO};
 use crate::repositories::CustomerRepository;
 use crate::entities::customer::Customer;
 use std::error::Error;

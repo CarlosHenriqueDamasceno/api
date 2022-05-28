@@ -2,12 +2,12 @@ mod repositories;
 mod infra;
 pub mod use_cases;
 mod entities;
-mod dto;
+mod dtos;
 
 #[cfg(test)]
 mod tests {
 
-    use crate::{use_cases::{car::GetCar, customer::{GetCustomer, SaveCustomer}}, infra, dto::CustomerInputDTO};
+    use crate::{use_cases::{car::GetCar, customer::{GetCustomer, SaveCustomer}}, infra, dtos::CustomerInputDTO};
 
     #[test]
     fn get_car() {
@@ -77,6 +77,6 @@ mod tests {
         
     }
 
-    
+
 
 }
