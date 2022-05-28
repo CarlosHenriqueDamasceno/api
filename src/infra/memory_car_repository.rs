@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{repositories::CarRepository, entities::Car};
+use crate::{repositories::CarRepository, entities::car::Car};
 
 pub struct MemoryCarRepository{
     cars: HashMap<u32, Car>
@@ -25,11 +25,21 @@ impl MemoryCarRepository {
 }
 
 impl CarRepository for MemoryCarRepository {
-    fn get(&self, id:u32) -> Result<&Car, &'static str> {
+    fn get(&self, id:u32) -> Result<Car, &'static str> {
 
         match self.cars.get(&id){
             Some(v) => {
-                return Ok(v)
+
+                let result = Car{
+                    id:    v.id,
+                    brand: v.brand.to_owned(),
+                    model: v.model.to_owned(),
+                    plate: v.plate.to_owned(),
+                    year:  v.year,
+                    price: v.price,
+                };
+
+                return Ok(result)
             },
             None => {
                 return Err("There is no car with this id!!");

@@ -2,20 +2,20 @@ mod repositories;
 mod infra;
 pub mod use_cases;
 mod entities;
+mod dto;
 
 #[cfg(test)]
 mod tests {
 
-    use std::collections::HashMap;
-
-    use crate::{use_cases::{car::GetCar, customer::GetCustomer}, infra};
+    use crate::{use_cases::{car::GetCar, customer::{GetCustomer, SaveCustomer}}, infra, dto::CustomerInputDTO};
 
     #[test]
     fn get_car() {
 
-        let car_repository = infra::memory_car_repository::MemoryCarRepository::new();
+        let car_repository  = infra::memory_car_repository::MemoryCarRepository::new();
         let get_car = GetCar::new(car_repository);
-        let id = 1;
+        let id                              = 1;
+        
         match get_car.execute(id){
 
             Ok(car) => {
@@ -33,9 +33,10 @@ mod tests {
     #[test]
     fn get_customer() {
 
-        let customer_repository = infra::memory_customer_repository::MemoryCustomerRepository::new();
+        let customer_repository       = infra::memory_customer_repository::MemoryCustomerRepository::new();
         let get_customer = GetCustomer::new(customer_repository);
-        let id = 1;
+        let id                                             = 1;
+        
         match get_customer.execute(id){
 
             Ok(customer) => {
@@ -53,20 +54,20 @@ mod tests {
     #[test]
     fn save_customer() {
 
-        let customer_repository = infra::memory_customer_repository::MemoryCustomerRepository::new();
+        let customer_data = CustomerInputDTO{id: 2, name: String::from("Andreina"), document: String::from("01547896542")};
+        let mut customer_repository = infra::memory_customer_repository::MemoryCustomerRepository::new();
 
-        let customer_data = HashMap::new();
 
-        customer_data.insert("name", "Andreina");
-        customer_data.insert("name", "Andreina");
+        let mut save_customer = SaveCustomer::new(&mut customer_repository);
+        match save_customer.execute(customer_data){
 
-        let get_customer = SaveCustomer::new(customer_repository, vec![]);
-        let id = 1;
-        match get_customer.execute(id){
+            Ok(result) => {
 
-            Ok(customer) => {
+                let get_customer = GetCustomer::new(customer_repository);
 
-                assert_eq!(customer.name, String::from("Carlos Henrique"));
+                let test = get_customer.execute(result.id).unwrap(); 
+
+                assert_eq!(test.name, String::from("Andreina"));
             }
             _ => {
 
@@ -75,4 +76,7 @@ mod tests {
         }
         
     }
+
+    
+
 }
