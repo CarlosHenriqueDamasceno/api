@@ -5,5 +5,7 @@ pub struct CustomerInputDTO{
 }
 
 pub struct CustomerOutputDTO{
-    pub id: u32
+    pub id: u32,
+    pub name: String,
+    pub document: String,
 }

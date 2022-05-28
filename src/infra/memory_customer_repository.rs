@@ -1,6 +1,6 @@
 use std::{collections::HashMap, error::Error};
 
-use crate::{repositories::CustomerRepository, entities::customer::Customer, dtos::CustomerOutputDTO};
+use crate::{repositories::CustomerRepository, entities::customer::Customer, dtos::{CustomerOutputDTO, CustomerInputDTO}};
 
 pub struct MemoryCustomerRepository{
     customers: HashMap<u32, Customer>
@@ -39,14 +39,14 @@ impl CustomerRepository for MemoryCustomerRepository {
         };
     }
 
-    fn save(&mut self, data:crate::dtos::CustomerInputDTO) -> Result<CustomerOutputDTO, Box<dyn Error>> {
+    fn save(&mut self, data:CustomerInputDTO) -> Result<CustomerOutputDTO, Box<dyn Error>> {
         
-        let customer = Customer::new(data.id, data.name, data.document)?;
+        let customer = Customer::new(data.id, data.name.to_owned(), data.document.to_owned())?;
         
         let id = customer.id;
         
         self.customers.insert(customer.id, customer);
         
-        Ok(CustomerOutputDTO{id})
+        Ok(CustomerOutputDTO{id: data.id, name: data.name, document: data.document})
     }
 }
