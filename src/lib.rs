@@ -9,7 +9,7 @@ pub mod use_cases;
 #[cfg(test)]
 mod tests {
 
-    use crate::{use_cases::{car::GetCar, customer::{GetCustomer, SaveCustomer}}, infra, dtos::CustomerInputDTO};
+    use crate::{use_cases::{car::GetCar, get_customer::GetCustomer, save_customer::SaveCustomer}, infra, dtos::CustomerInputDTO};
 
     #[test]
     fn get_car() {
@@ -78,7 +78,6 @@ mod tests {
         }
         
     }
-
 
 
 }

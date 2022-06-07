@@ -7,5 +7,5 @@ use controllers::customer;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![customer::get_customer])
+    rocket::build().mount("/", routes![customer::get_customer]).register("/", catchers![customer::not_found])
 }

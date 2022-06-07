@@ -1,5 +1,6 @@
-use rocket::serde::{Serialize, json::Json};
-use api::{infra::memory_customer_repository, use_cases::customer::GetCustomer};
+use rocket::{serde::{Serialize, json::{json, Value}}, Request};
+use rocket::response::content;
+use api::{infra::memory_customer_repository, use_cases::get_customer::GetCustomer};
 
 #[derive(Serialize)]
 #[serde(crate = "rocket::serde")]
@@ -11,7 +12,7 @@ pub struct ReturnCustomer{
 
 
 #[get("/customers/<id>")]
-pub fn get_customer(id: u32) -> Json<ReturnCustomer> {
+pub fn get_customer(id: u32) -> Option<Value> {
 
     let customer_repository = memory_customer_repository::MemoryCustomerRepository::new();
     let get_customer = GetCustomer::new(customer_repository);
@@ -26,12 +27,20 @@ pub fn get_customer(id: u32) -> Json<ReturnCustomer> {
                 document: customer.document
             };
 
-            return Json(result);
+            Some(json!({ "Customer": result, }))
         }
-        _ => {
-
-            panic!("error");
-            
-        }
+        _ => None
     }
+}
+
+
+#[catch(404)]
+pub fn not_found(req: &Request<'_>) -> content::RawJson<&'static str> {
+    content::RawJson(r#"
+                        { 
+                            "error": {
+                                "type": "Resource not found"
+                            } 
+                        }
+                    "#)
 }
