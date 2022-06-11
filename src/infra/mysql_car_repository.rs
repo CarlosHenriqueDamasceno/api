@@ -1,37 +1,54 @@
 use mysql::*;
 use mysql::prelude::*;
+use std::error::Error;
+use std::{result::Result as StdResult};
 
-#[derive(Debug, PartialEq)]
-struct Car {
-    id: u32,
-    brand: String,
-    model: String,
-    year: u16,
-    plate: Option<String>,
-    price: f64,
-}
+use crate::repositories::CarRepository;
+use crate::dtos::CarMysqlOutputDTO;
+use crate::entities::car::Car;
 
-
-struct mysqlCarRepository {
+pub struct MysqlCarRepository {
 
     connection: PooledConn
 
 }
 
-impl mysqlCarRepository {
+impl MysqlCarRepository {
     
-    pub fn new() -> Result<mysqlCarRepository>{
+    pub fn new() -> StdResult<MysqlCarRepository, Box<dyn Error>>{
 
-        let opts = Opts::from_url("mysql://root:password@localhost:3306/car_store")?;
+        let opts = Opts::from_url("mysql://root:@localhost:3306/car_store")?;
         let pool = Pool::new(opts)?;
         let connection = pool.get_conn()?;
 
-        Ok(mysqlCarRepository { connection })
+        Ok(MysqlCarRepository { connection })
 
     }
+}
 
-    pub fn getAllCars() -> Vec<Car>{
+impl CarRepository for MysqlCarRepository {
+    
+    
+    
+    fn getAll(&mut self) -> StdResult<Vec<Car>, Box<dyn Error>>{
+
+        let cars = self.connection
+        .query_map(
+            "SELECT id, brand, model, year, plate, price from cars",
+            |(id, brand, model, year, plate, price)| {
+                CarMysqlOutputDTO { id, brand, model, year, plate, price}
+            },
+        )?;
+
+        let mut result = Vec::new();
+        for car in cars {
+            result.push(Car::new(car.id, car.brand, car.model, car.year, car.plate, car.price));
+        }
         
-        vec![]
+       Ok(result)
+    }
+
+    fn get(&mut self, id:u32) -> StdResult<Car, &'static str> {
+        todo!()
     }
 }

@@ -8,15 +8,36 @@ pub mod use_cases;
 
 #[cfg(test)]
 mod tests {
+    
+    use crate::{use_cases::{car::{GetCar, GetAllCars}, get_customer::GetCustomer, save_customer::SaveCustomer}, infra, dtos::CustomerInputDTO};
 
-    use crate::{use_cases::{car::GetCar, get_customer::GetCustomer, save_customer::SaveCustomer}, infra, dtos::CustomerInputDTO};
+    #[test]
+    fn get_cars() {
+
+        let car_repository = infra::mysql_car_repository::MysqlCarRepository::new().expect("Fail");
+        
+        let mut get_all_cars  = GetAllCars::new(car_repository);
+        
+        match get_all_cars.execute(){
+
+            Ok(cars) => {
+
+                assert_eq!(cars[0].id, 1);
+            }
+            _ => {
+
+                assert!(false);
+            }
+        }
+        
+    }
 
     #[test]
     fn get_car() {
 
-        let car_repository  = infra::memory_car_repository::MemoryCarRepository::new();
-        let get_car = GetCar::new(car_repository);
-        let id                              = 1;
+        let car_repository = infra::memory_car_repository::MemoryCarRepository::new();
+        let mut get_car    = GetCar::new(car_repository);
+        let id             = 1;
         
         match get_car.execute(id){
 
@@ -35,9 +56,9 @@ mod tests {
     #[test]
     fn get_customer() {
 
-        let customer_repository       = infra::memory_customer_repository::MemoryCustomerRepository::new();
-        let get_customer = GetCustomer::new(customer_repository);
-        let id                                             = 1;
+        let customer_repository = infra::memory_customer_repository::MemoryCustomerRepository::new();
+        let get_customer        = GetCustomer::new(customer_repository);
+        let id                  = 1;
         
         match get_customer.execute(id){
 
@@ -56,7 +77,7 @@ mod tests {
     #[test]
     fn save_customer() {
 
-        let customer_data = CustomerInputDTO{id: 2, name: String::from("Andreina"), document: String::from("01547896542")};
+        let customer_data           = CustomerInputDTO{id: 2, name: String::from("Andreina"), document: String::from("01547896542")};
         let mut customer_repository = infra::memory_customer_repository::MemoryCustomerRepository::new();
 
 

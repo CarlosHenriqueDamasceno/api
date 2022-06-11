@@ -25,7 +25,7 @@ impl MemoryCarRepository {
 }
 
 impl CarRepository for MemoryCarRepository {
-    fn get(&self, id:u32) -> Result<Car, &'static str> {
+    fn get(&mut self, id:u32) -> Result<Car, &'static str> {
 
         match self.cars.get(&id){
             Some(v) => {
@@ -45,5 +45,9 @@ impl CarRepository for MemoryCarRepository {
                 return Err("There is no car with this id!!");
             }
         };
+    }
+
+    fn getAll(&mut self) -> Result<Vec<Car>, Box<dyn std::error::Error>> {
+        todo!()
     }
 }
